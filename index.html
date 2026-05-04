@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Web-Based Text Encryption Tool — Encrypt and decrypt text using Caesar Cipher, AES, DES, RSA, and Base64. Includes SHA-256 hashing.">
+    <title>CryptVault — Text Encryption Tool</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Animated background particles -->
+    <div class="bg-particles" id="bgParticles"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-inner">
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                    </svg>
+                </div>
+                <span class="logo-text">CryptVault</span>
+            </div>
+            <nav class="nav-links">
+                <a href="#encrypt" class="nav-link active" data-tab="encrypt">Encrypt</a>
+                <a href="#decrypt" class="nav-link" data-tab="decrypt">Decrypt</a>
+                <a href="#hash" class="nav-link" data-tab="hash">Hash</a>
+            </nav>
+            <div class="header-badge">
+                <span class="badge-dot"></span>
+                <span>Secure</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1 class="hero-title">
+            <span class="hero-title-line">Secure Your Text</span>
+            <span class="hero-title-gradient">With Military-Grade Encryption</span>
+        </h1>
+        <p class="hero-subtitle">Encrypt, decrypt, and hash your sensitive data using industry-standard algorithms — all in your browser.</p>
+    </section>
+
+    <!-- Main App -->
+    <main class="app-container">
+        <!-- Encrypt Tab -->
+        <section class="tab-panel active" id="panel-encrypt">
+            <div class="card card-main">
+                <div class="card-header">
+                    <div class="card-icon encrypt-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="card-title">Encrypt Text</h2>
+                        <p class="card-description">Enter your plaintext and choose an algorithm to encrypt it.</p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="encryptInput" class="form-label">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="label-icon">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="16" y1="13" x2="8" y2="13"/>
+                            <line x1="16" y1="17" x2="8" y2="17"/>
+                        </svg>
+                        Plain Text
+                    </label>
+                    <textarea id="encryptInput" class="form-textarea" placeholder="Enter the text you want to encrypt..." rows="5"></textarea>
+                    <span class="char-count" id="encryptCharCount">0 characters</span>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group flex-1">
+                        <label for="encryptAlgorithm" class="form-label">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="label-icon">
+                                <polyline points="16 18 22 12 16 6"/>
+                                <polyline points="8 6 2 12 8 18"/>
+                            </svg>
+                            Algorithm
+                        </label>
+                        <div class="select-wrapper">
+                            <select id="encryptAlgorithm" class="form-select">
+                                <option value="" disabled selected>Select encryption algorithm...</option>
+                                <option value="caesar">Caesar Cipher (Shift: 3)</option>
+                                <option value="aes">AES-256 (Advanced Encryption Standard)</option>
+                                <option value="des">DES (Data Encryption Standard)</option>
+                                <option value="rsa">RSA (Asymmetric Encryption)</option>
+                                <option value="base64">Base64 Encoding</option>
+                            </select>
+                            <svg class="select-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="encryptKeyGroup">
+                        <label for="encryptKey" class="form-label">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="label-icon">
+                                <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/>
+                            </svg>
+                            Secret Key
+                        </label>
+                        <input type="text" id="encryptKey" class="form-input" placeholder="Enter secret key...">
+                    </div>
+                </div>
+
+                <!-- Algorithm Info Card -->
+                <div class="algo-info" id="encryptAlgoInfo" style="display:none;">
+                    <div class="algo-info-header">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="algo-info-icon">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="16" x2="12" y2="12"/>
+                            <line x1="12" y1="8" x2="12.01" y2="8"/>
+                        </svg>
+                        <span id="encryptAlgoName">Algorithm Info</span>
+                    </div>
+                    <p id="encryptAlgoDesc" class="algo-info-text"></p>
+                    <div class="algo-tags" id="encryptAlgoTags"></div>
+                </div>
+
+                <button id="encryptBtn" class="btn btn-primary" onclick="handleEncrypt()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                    </svg>
+                    Encrypt Text
+                </button>
+
+                <!-- Validation message -->
+                <div class="validation-msg" id="encryptValidation"></div>
+            </div>
+
+            <!-- Output Card -->
+            <div class="card card-output" id="encryptOutputCard" style="display:none;">
+                <div class="card-header">
+                    <div class="card-icon output-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="4 17 10 11 4 5"/>
+                            <line x1="12" y1="19" x2="20" y2="19"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="card-title">Ciphertext Output</h2>
+                        <p class="card-description">Your encrypted text is ready.</p>
+                    </div>
+                    <button class="btn-icon" id="copyEncryptBtn" onclick="copyOutput('encryptOutput')" title="Copy to clipboard">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                        </svg>
+                        <span class="copy-tooltip">Copied!</span>
+                    </button>
+                </div>
+                <div class="output-area" id="encryptOutput"></div>
+            </div>
+        </section>
+
+        <!-- Decrypt Tab -->
+        <section class="tab-panel" id="panel-decrypt">
+            <div class="card card-main">
+                <div class="card-header">
+                    <div class="card-icon decrypt-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                            <path d="M7 11V7a5 5 0 0 1 9.9-1"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="card-title">Decrypt Text</h2>
+                        <p class="card-description">Paste your ciphertext and choose the algorithm to decrypt it.</p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="decryptInput" class="form-label">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="label-icon">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                        </svg>
+                        Ciphertext
+                    </label>
+                    <textarea id="decryptInput" class="form-textarea" placeholder="Paste the ciphertext here..." rows="5"></textarea>
+                    <span class="char-count" id="decryptCharCount">0 characters</span>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group flex-1">
+                        <label for="decryptAlgorithm" class="form-label">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="label-icon">
+                                <polyline points="16 18 22 12 16 6"/>
+                                <polyline points="8 6 2 12 8 18"/>
+                            </svg>
+                            Algorithm
+                        </label>
+                        <div class="select-wrapper">
+                            <select id="decryptAlgorithm" class="form-select">
+                                <option value="" disabled selected>Select decryption algorithm...</option>
+                                <option value="caesar">Caesar Cipher (Shift: 3)</option>
+                                <option value="aes">AES-256</option>
+                                <option value="des">DES</option>
+                                <option value="rsa">RSA</option>
+                                <option value="base64">Base64 Decoding</option>
+                            </select>
+                            <svg class="select-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="decryptKeyGroup">
+                        <label for="decryptKey" class="form-label">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="label-icon">
+                                <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/>
+                            </svg>
+                            Secret Key
+                        </label>
+                        <input type="text" id="decryptKey" class="form-input" placeholder="Enter secret key...">
+                    </div>
+                </div>
+
+                <button id="decryptBtn" class="btn btn-secondary" onclick="handleDecrypt()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                        <path d="M7 11V7a5 5 0 0 1 9.9-1"/>
+                    </svg>
+                    Decrypt Text
+                </button>
+
+                <div class="validation-msg" id="decryptValidation"></div>
+            </div>
+
+            <div class="card card-output" id="decryptOutputCard" style="display:none;">
+                <div class="card-header">
+                    <div class="card-icon output-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="4 17 10 11 4 5"/>
+                            <line x1="12" y1="19" x2="20" y2="19"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="card-title">Decrypted Output</h2>
+                        <p class="card-description">Your decrypted plaintext is ready.</p>
+                    </div>
+                    <button class="btn-icon" id="copyDecryptBtn" onclick="copyOutput('decryptOutput')" title="Copy to clipboard">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                        </svg>
+                        <span class="copy-tooltip">Copied!</span>
+                    </button>
+                </div>
+                <div class="output-area" id="decryptOutput"></div>
+            </div>
+        </section>
+
+        <!-- Hash Tab -->
+        <section class="tab-panel" id="panel-hash">
+            <div class="card card-main">
+                <div class="card-header">
+                    <div class="card-icon hash-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="4" y1="9" x2="20" y2="9"/>
+                            <line x1="4" y1="15" x2="20" y2="15"/>
+                            <line x1="10" y1="3" x2="8" y2="21"/>
+                            <line x1="16" y1="3" x2="14" y2="21"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="card-title">Hash Text</h2>
+                        <p class="card-description">Generate a one-way cryptographic hash of your text.</p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="hashInput" class="form-label">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="label-icon">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                        </svg>
+                        Input Text
+                    </label>
+                    <textarea id="hashInput" class="form-textarea" placeholder="Enter text to hash..." rows="5"></textarea>
+                    <span class="char-count" id="hashCharCount">0 characters</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="hashAlgorithm" class="form-label">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="label-icon">
+                            <polyline points="16 18 22 12 16 6"/>
+                            <polyline points="8 6 2 12 8 18"/>
+                        </svg>
+                        Hash Algorithm
+                    </label>
+                    <div class="select-wrapper">
+                        <select id="hashAlgorithm" class="form-select">
+                            <option value="" disabled selected>Select hash algorithm...</option>
+                            <option value="sha256">SHA-256</option>
+                            <option value="sha512">SHA-512</option>
+                            <option value="sha1">SHA-1</option>
+                            <option value="md5">MD5</option>
+                        </select>
+                        <svg class="select-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="hash-info-box">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                        <line x1="12" y1="9" x2="12" y2="13"/>
+                        <line x1="12" y1="17" x2="12.01" y2="17"/>
+                    </svg>
+                    <span>Hashing is a <strong>one-way</strong> operation. The original text cannot be recovered from the hash.</span>
+                </div>
+
+                <button id="hashBtn" class="btn btn-accent" onclick="handleHash()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="4" y1="9" x2="20" y2="9"/>
+                        <line x1="4" y1="15" x2="20" y2="15"/>
+                        <line x1="10" y1="3" x2="8" y2="21"/>
+                        <line x1="16" y1="3" x2="14" y2="21"/>
+                    </svg>
+                    Generate Hash
+                </button>
+
+                <div class="validation-msg" id="hashValidation"></div>
+            </div>
+
+            <div class="card card-output" id="hashOutputCard" style="display:none;">
+                <div class="card-header">
+                    <div class="card-icon output-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="4 17 10 11 4 5"/>
+                            <line x1="12" y1="19" x2="20" y2="19"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="card-title">Hash Output</h2>
+                        <p class="card-description">Your cryptographic hash digest.</p>
+                    </div>
+                    <button class="btn-icon" id="copyHashBtn" onclick="copyOutput('hashOutput')" title="Copy to clipboard">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                        </svg>
+                        <span class="copy-tooltip">Copied!</span>
+                    </button>
+                </div>
+                <div class="output-area mono" id="hashOutput"></div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features-section">
+            <h2 class="features-title">Supported Algorithms</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon" style="--accent: #f59e0b;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+                    </div>
+                    <h3>Caesar Cipher</h3>
+                    <p>Classic substitution cipher that shifts letters by a fixed number. Great for learning cryptography basics.</p>
+                    <span class="feature-tag symmetric">Symmetric</span>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon" style="--accent: #8b5cf6;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    </div>
+                    <h3>AES-256</h3>
+                    <p>Industry-standard symmetric encryption used by governments and organizations worldwide.</p>
+                    <span class="feature-tag symmetric">Symmetric</span>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon" style="--accent: #06b6d4;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    </div>
+                    <h3>DES</h3>
+                    <p>Legacy block cipher with 56-bit keys. Historically significant though now considered insecure.</p>
+                    <span class="feature-tag symmetric">Symmetric</span>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon" style="--accent: #ec4899;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+                    </div>
+                    <h3>RSA</h3>
+                    <p>Asymmetric public-key cryptosystem widely used for secure data transmission.</p>
+                    <span class="feature-tag asymmetric">Asymmetric</span>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon" style="--accent: #10b981;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                    </div>
+                    <h3>Base64</h3>
+                    <p>Binary-to-text encoding scheme. Not encryption, but useful for data encoding and transport.</p>
+                    <span class="feature-tag encoding">Encoding</span>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon" style="--accent: #f43f5e;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg>
+                    </div>
+                    <h3>SHA-256</h3>
+                    <p>Cryptographic hash function producing a 256-bit digest. Used in blockchain and digital signatures.</p>
+                    <span class="feature-tag hashing">Hashing</span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>&copy; 2026 CryptVault — Information Security Assignment</p>
+            <p class="footer-sub">Built with CryptoJS &amp; JSEncrypt</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsencrypt/3.3.2/jsencrypt.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
